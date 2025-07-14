@@ -1,0 +1,41 @@
+#Question 1:Collect emails for students in the current Intro course
+
+# 1. Find the Intro to Programming coding class
+intro_class = CodingClass.find_by(title: 'Intro to Programming')
+
+# 2. Find the Spring 2025 trimester
+spring_2025 = Trimester.find_by(year: '2025', term: 'Spring')
+
+# 3. Find the Intro to Programming - Spring 2025 class
+intro_course = Course.find_by(coding_class_id: intro_class.id, trimester_id: spring_2025.id)
+
+# 4. Find all enrollments for this course
+enrollments = Enrollment.where(course_id: intro_course.id)
+
+# 5. Get the students and their emails
+enrollments.each do |enrollment|
+  student = Student.find(enrollment.student_id)
+  puts "#{student.id}, #{student.email}"
+end
+
+#Question 2: Email all mentors who have not assigned a final grade
+# 1. Find Spring 2025 trimester 
+spring_2025 = Trimester.find_by(year: '2025', term: 'Spring')
+
+# 2. Find all courses in Spring 2025
+spring_courses = Course.where(trimester_id: spring_2025.id)
+
+# 3. Find enrollments in Spring 2025 courses without final grades
+enrollments_without_grades = Enrollment.joins(:course => :trimester).where(trimesters: {year: '2025', term: 'Spring'}).where(final_grade: [nil, ''])
+
+# 4. Find mentor assignments for these enrollments
+mentor_assignments = MentorEnrollmentAssignment.where(enrollment_id: enrollments_without_grades.pluck(:id))
+
+# 5. Get unique mentors from these assignments
+mentor_ids = mentor_assignments.pluck(:mentor_id).uniq
+
+# 6. Get mentor details and emails
+mentor_ids.each do |mentor_id|
+  mentor = Mentor.find(mentor_id)
+  puts "#{mentor.id}, #{mentor.email}"
+end
