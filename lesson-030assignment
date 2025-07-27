@@ -1,0 +1,50 @@
+doc-rails(dev)> ActiveRecord::Base.connection.tables
+=> 
+["submissions",
+ "mentor_enrollment_assignments",
+ "schema_migrations",
+ "coding_classes",
+ "students",
+ "trimesters",
+ "mentors",
+ "courses",
+ "ar_internal_metadata",
+ "enrollments",
+ "lessons"]
+doc-rails(dev)> 
+
+topics
+lessons
+
+1. Tables to add:   - topics table - Store topic infomation
+                    - lesson_topics table - join table connecting lessons and topics
+
+    Associations
+        Topic has_many lessons through lesson_topics
+        Lesson has_many topics through lesson_topics
+        LessonTopic belong_to both lesson and topic
+
+2. Association columns required
+    join table needs foreign keys lesson_id and topic_id for many_to_many relationship
+
+3. Additional columns needed
+    Topics table: title(string) to store topic names
+    Rails timestamps
+    Primary key
+
+4. Table structure
+    Topics Table
+        id:integer (primary key)
+        title: string
+        created_at: datetime
+        updated_at: datetime
+
+    Lesson_Topics table
+        id: integer (primary key)
+        lesson_id: integer (foreign key)
+        topic_id: integer (foreign key)
+        created_at: datetime
+        updated_at: datetime
+
+5. Generator command
+      rails generate migration create_topics
