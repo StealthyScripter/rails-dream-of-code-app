@@ -1,0 +1,141 @@
+#Get the Spring 2026 semester
+spring_2026 = Trimester.find_by!(year:'2026',term:'Spring')
+
+#Loop through the coding classes and create courses
+CodingClass.all.each do |coding_class|
+    Course.create(coding_class_id: coding_class.id,trimester_id:spring_2026.id)
+end
+
+
+# Question 2
+# Create a new student
+new_student = Student.create(
+  first_name: 'John',
+  last_name: 'Doe', 
+  email: 'doe@example.com'
+)
+
+# Find the Intro to Programming course for Spring 2026
+# First, let's find the coding class
+intro_class = CodingClass.find_by(title: 'Intro to Programming')
+
+# Find the course for Spring 2026
+intro_course = Course.find_by(
+  coding_class_id: intro_class.id,
+  trimester_id: spring_2026.id
+)
+
+#Find the mentor with two or less students
+mentor = Mentor
+  .left_joins(:mentor_enrollment_assignments)
+  .group("mentors.id")
+  .having("COUNT(mentor_enrollment_assignments.id) <= 2")
+  .first
+
+#Enroll new student
+enrollment = Enrollment.create!(
+  student_id: new_student.id,
+  course: intro_course,
+  final_grade: "in progress"
+)
+
+#Assign mentor
+MentorEnrollmentAssignment.create!(
+  mentor: mentor,
+  enrollment: enrollment
+)
+
+# Question 3
+Smart inventory Management System
+A comprehensive inventory management platform that helps businesses optimize their stock levels, reduce costs, and prevent stockouts through Ai-powered demand forecastingand automated reordering. 
+Primary users: Inventory managers, Warehouse staff, Store managers, Procurement team, Company Administrators and suppliers
+A manager can add new products with details
+A manager can set minimum stock levels and reorder points for each product/location
+A store manager can record sales transactions (reducing available inventory)
+Suppliers receive automated notifications about new orders
+
+Screens
+Dashboard   - real-time stock level overview
+            - Key Metrics i.e Total value, turnover rates
+            - Recent transactions and pending orders
+product catalog - Individual product details with stock levels by location
+                - Historical sales trends and forecasting charts
+                - Supplier infomation
+Inventory movements - Transaction History
+                    - Real time stock level updates
+Purchase orders - Create and manage orders
+                - Track order status and delivery schedules
+                - Automated reorder suggestions with approval workflow
+Analytics and reports
+
+
+
+Question 4
+#products
+id (primary key)
+name (string, not null)
+sku (string, not null, unique)
+unit_cost (decimal, precision: 10, scale: 2)
+reorder_point (integer, default: 10)
+created_at (datetime)
+updated_at (datetime)
+
+Associations:
+has_many :stock_levels
+has_many :transactions
+
+
+#locations
+id (primary key)
+name (string, not null)
+location_type (string) # warehouse, store
+created_at (datetime)
+updated_at (datetime)
+
+Associations:
+has_many :stock_levels
+has_many :transactions
+
+
+#stock_levels
+id (primary key)
+product_id (foreign key, not null)
+location_id (foreign key, not null)
+quantity (integer, default: 0)
+created_at (datetime)
+updated_at (datetime)
+
+Associations:
+belongs_to :product
+belongs_to :location
+
+
+#transactions
+id (primary key)
+product_id (foreign key, not null)
+location_id (foreign key, not null)
+user_id (foreign key, not null)
+transaction_type (string, not null) # sale, receipt, adjustment
+quantity (integer, not null) # positive for receipt, negative for sale
+unit_price (decimal, precision: 10, scale: 2)
+transaction_date (datetime, not null)
+created_at (datetime)
+updated_at (datetime)
+
+Associations:
+belongs_to :product
+belongs_to :location
+belongs_to :user
+
+
+#users
+id (primary key)
+email (string, not null, unique)
+first_name (string, not null)
+last_name (string, not null)
+role (string, default: 'staff') # admin, manager, staff
+created_at (datetime)
+updated_at (datetime)
+
+Associations:
+has_many :transactions
