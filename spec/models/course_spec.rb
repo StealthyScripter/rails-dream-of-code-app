@@ -10,10 +10,10 @@ RSpec.describe Course, type: :model do
   # let(:trimester) defines the trimester variable
   # let(:course) defines the course variable
 
-  let(:coding_class) { 
+  let(:coding_class) {
     CodingClass.create(title: 'Test Class')
   }
-  let(:trimester) { 
+  let(:trimester) {
     Trimester.create(
       year: '2025',
       term: 'Winter',
@@ -26,7 +26,7 @@ RSpec.describe Course, type: :model do
     Course.create(coding_class: coding_class,
                   trimester: trimester)
   }
-    
+
   # We define a "describe block" for each method or set of behaviors we're testing
   describe 'validations' do
     it 'is valid when both coding_class and trimester are present' do
@@ -44,7 +44,7 @@ RSpec.describe Course, type: :model do
     end
   end
 
-  describe '.student_name_list', skip: true do
+  describe '.student_name_list'do
     # First, we'll write a test that expects the method to exist
     # for an instance of a course
     it 'exists for a course' do
@@ -68,14 +68,14 @@ RSpec.describe Course, type: :model do
       let!(:enrolled_student_1) {
         Student.create!(
           first_name: 'Student',
-          last_name: 'One', 
+          last_name: 'One',
           email: 'studentone@example.com'
         )
       }
       let!(:enrolled_student_2) {
         Student.create!(
           first_name: 'Student',
-          last_name: 'Two', 
+          last_name: 'Two',
           email: 'studenttwo@example.com'
         )
       }
@@ -101,7 +101,7 @@ RSpec.describe Course, type: :model do
     end
   end
 
-  describe '.student_email_list', skip: true do
+  describe '.student_email_list' do
     it 'exists for a course' do
       expect { course.student_email_list }.not_to raise_error(NoMethodError)
     end
@@ -118,14 +118,14 @@ RSpec.describe Course, type: :model do
       let(:enrolled_student_1) {
         Student.create!(
           first_name: 'Student',
-          last_name: 'One', 
+          last_name: 'One',
           email: 'studentone@example.com'
         )
       }
       let(:enrolled_student_2) {
         Student.create!(
           first_name: 'Student',
-          last_name: 'Two', 
+          last_name: 'Two',
           email: 'studenttwo@example.com'
         )
       }
