@@ -115,14 +115,14 @@ RSpec.describe Course, type: :model do
 
     context 'when there are students enrolled in the course' do
       # Create student records with dummy data
-      let(:enrolled_student_1) {
+      let(:enrolled_student_0) {
         Student.create!(
           first_name: 'Student',
           last_name: 'One',
           email: 'studentone@example.com'
         )
       }
-      let(:enrolled_student_2) {
+      let(:enrolled_student_1) {
         Student.create!(
           first_name: 'Student',
           last_name: 'Two',
@@ -132,8 +132,8 @@ RSpec.describe Course, type: :model do
 
       # Create enrollment records for the course
       before do
+        Enrollment.create!(student: enrolled_student_0, course: course)
         Enrollment.create!(student: enrolled_student_1, course: course)
-        Enrollment.create!(student: enrolled_student_2, course: course)
       end
 
       # This is what we expect the method to return
